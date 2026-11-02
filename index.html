@@ -1,0 +1,470 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SportsPulse – IPL Data Analytics & Visualizations</title>
+  <meta name="description" content="Interactive Exploratory Data Analysis & Visualizations for Indian Premier League (IPL) historical datasets using Pandas and Chart.js.">
+  
+  <!-- Modern Typography from Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@600;700;800;900&display=swap" rel="stylesheet">
+  
+  <!-- Chart.js 4.4 CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  
+  <!-- Design System CSS -->
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- Site Header -->
+  <header class="site-header">
+    <div class="container header-inner">
+      <div class="brand">
+        <div class="brand-icon">
+          <!-- Cricket / Analytics SVG Icon -->
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="10"></circle>
+            <path d="M4.93 4.93l4.24 4.24"></path>
+            <path d="M14.83 9.17l4.24-4.24"></path>
+            <path d="M14.83 14.83l4.24 4.24"></path>
+            <path d="M4.93 19.07l4.24-4.24"></path>
+          </svg>
+        </div>
+        <div class="brand-text">
+          <h1>SportsPulse IPL</h1>
+          <span>Exploratory Analytics Hub</span>
+        </div>
+      </div>
+
+      <div class="header-badges">
+        <div class="pulse-badge">
+          <span class="pulse-dot"></span>
+          <span>1,095 Matches Analyzed</span>
+        </div>
+        <a href="#notebook" class="btn-repo" id="btnViewNotebook">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+            <polyline points="14 2 14 8 20 8"></polyline>
+            <line x1="16" y1="13" x2="8" y2="13"></line>
+            <line x1="16" y1="17" x2="8" y2="17"></line>
+            <polyline points="10 9 9 9 8 9"></polyline>
+          </svg>
+          Jupyter Notebook
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Content Container -->
+  <main class="container">
+
+    <!-- Hero Banner -->
+    <section class="hero-banner">
+      <div class="hero-content">
+        <h2>Indian Premier League — Deep-Dive Data Analytics</h2>
+        <p>
+          High-performance analytics powered by Pandas and visualized with interactive bar charts, trend curves, and broadcaster commentary. Explore 260,000+ ball-by-ball deliveries, 1,000+ matches, and player metrics across all 17 seasons.
+        </p>
+        <div class="hero-highlights">
+          <span class="hero-badge">🏏 17 Seasons (2008 – 2024)</span>
+          <span class="hero-badge">⚡ 327,000+ Runs Tracked</span>
+          <span class="hero-badge">🎯 14,000+ Wickets Analyzed</span>
+          <span class="hero-badge">📊 Groupby, Agg, Pivots & Reshaping</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- Top KPI Cards Grid -->
+    <section class="kpi-grid" id="kpiContainer">
+      <!-- Injected by JavaScript dynamically -->
+    </section>
+
+    <!-- Navigation Tabs -->
+    <div class="tab-navigation-wrapper">
+      <nav class="tab-nav" role="tablist">
+        <button class="nav-tab-btn active" data-tab="tab-overview" role="tab" id="tabBtnOverview">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
+          Overview & Trends
+        </button>
+        <button class="nav-tab-btn" data-tab="tab-batting" role="tab" id="tabBtnBatting">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 2h4v4l-12 12-4-4L18 2z"></path><path d="M14 6l4 4"></path><path d="M5 19l-3 3"></path></svg>
+          Batting Masterclass
+        </button>
+        <button class="nav-tab-btn" data-tab="tab-bowling" role="tab" id="tabBtnBowling">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path></svg>
+          Bowling Dynamics
+        </button>
+        <button class="nav-tab-btn" data-tab="tab-franchises" role="tab" id="tabBtnFranchises">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"></path><path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"></path><path d="M4 22h16"></path><path d="M10 14.66V17c0 .55-.45 1-1 1H7c-.55 0-1-.45-1-1v-2.34"></path><path d="M18 14.66V17c0 .55-.45 1-1 1h-2c-.55 0-1-.45-1-1v-2.34"></path><path d="M18 2H6v7a6 6 0 0 0 12 0V2z"></path></svg>
+          Franchise Dominance
+        </button>
+        <button class="nav-tab-btn" data-tab="tab-overs" role="tab" id="tabBtnOvers">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+          Over Progression & Toss
+        </button>
+        <button class="nav-tab-btn" data-tab="tab-commentary" role="tab" id="tabBtnCommentary">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"></path><path d="M19 10v2a7 7 0 0 1-14 0v-2"></path><line x1="12" y1="19" x2="12" y2="23"></line><line x1="8" y1="23" x2="16" y2="23"></line></svg>
+          Broadcaster Studio
+        </button>
+      </nav>
+    </div>
+
+    <!-- ==================== TAB 1: OVERVIEW ==================== -->
+    <div class="tab-pane active" id="tab-overview">
+      <div class="charts-grid-2">
+        
+        <!-- Season Evolution Bar / Line Chart -->
+        <div class="chart-card">
+          <div class="chart-card-header">
+            <div class="chart-card-title">
+              <h3>
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#3b82f6" stroke-width="2"><path d="M18 20V10"></path><path d="M12 20V4"></path><path d="M6 20v-6"></path></svg>
+                Matches & Run Scoring Across Seasons
+              </h3>
+              <p>Total matches and average runs scored per match from 2008 to 2024</p>
+            </div>
+          </div>
+          <div class="chart-canvas-wrapper">
+            <canvas id="seasonEvolutionChart"></canvas>
+          </div>
+        </div>
+
+        <!-- Toss Decision & Win Correlation -->
+        <div class="chart-card">
+          <div class="chart-card-header">
+            <div class="chart-card-title">
+              <h3>
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#f59e0b" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><path d="M16 12l-4-4-4 4"></path></svg>
+                Toss Decision & Match Win Impact
+              </h3>
+              <p>Fielding vs Batting preference and toss winner match win percentage</p>
+            </div>
+          </div>
+          <div class="chart-canvas-wrapper">
+            <canvas id="tossImpactChart"></canvas>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Quick Highlights Grid -->
+      <div class="charts-grid-3">
+        <div class="phase-card">
+          <h4>🏆 Most Successful Team</h4>
+          <p><strong>Mumbai Indians</strong> (144 wins, 5 championship titles), followed closely by <strong>Chennai Super Kings</strong> (138 wins, 5 championship titles).</p>
+        </div>
+        <div class="phase-card">
+          <h4>⚡ Leading Run Scorer</h4>
+          <p><strong>Virat Kohli</strong> leads all batters with an extraordinary <strong>8,014 runs</strong>, averaging over 38 runs per match across his IPL career.</p>
+        </div>
+        <div class="phase-card">
+          <h4>🎯 Most Economical Bowler</h4>
+          <p><strong>Rashid Khan</strong> and <strong>Anil Kumble</strong> maintain the lowest economy rates in IPL history among qualifying bowlers with 500+ balls.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- ==================== TAB 2: BATTING ==================== -->
+    <div class="tab-pane" id="tab-batting">
+      
+      <!-- Top Batters Horizontal Bar Chart -->
+      <div class="chart-card" style="margin-bottom: 28px;">
+        <div class="chart-card-header">
+          <div class="chart-card-title">
+            <h3>
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#3b82f6" stroke-width="2"><rect x="3" y="4" width="18" height="16" rx="2"></rect><line x1="8" y1="12" x2="16" y2="12"></line></svg>
+              Top IPL Run Scorers
+            </h3>
+            <p>Compare total runs, strike rates, or boundary power across batting legends</p>
+          </div>
+          <div class="chart-controls">
+            <button class="control-btn active" id="btnBattingRuns">Total Runs</button>
+            <button class="control-btn" id="btnBattingSR">Strike Rate</button>
+            <button class="control-btn" id="btnBattingAvg">Batting Average</button>
+          </div>
+        </div>
+        <div class="chart-canvas-wrapper" style="min-height: 400px;">
+          <canvas id="topBattersChart"></canvas>
+        </div>
+      </div>
+
+      <div class="charts-grid-2">
+        <!-- Boundary Distribution (4s vs 6s) -->
+        <div class="chart-card">
+          <div class="chart-card-header">
+            <div class="chart-card-title">
+              <h3>
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#06b6d4" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
+                Boundary Breakdown: Fours vs Sixes
+              </h3>
+              <p>Total boundary hits for the top 10 run-scorers</p>
+            </div>
+          </div>
+          <div class="chart-canvas-wrapper">
+            <canvas id="boundariesChart"></canvas>
+          </div>
+        </div>
+
+        <!-- Batter Match Runs Distribution -->
+        <div class="chart-card">
+          <div class="chart-card-header">
+            <div class="chart-card-title">
+              <h3>
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 14 14"></polyline></svg>
+                Highest Individual Match Scores
+              </h3>
+              <p>Top scores recorded in an individual match for each batter</p>
+            </div>
+          </div>
+          <div class="chart-canvas-wrapper">
+            <canvas id="highScoreChart"></canvas>
+          </div>
+        </div>
+      </div>
+
+      <!-- Searchable Batting Table -->
+      <div class="table-card">
+        <div class="table-header-bar">
+          <div class="chart-card-title">
+            <h3>Top Batsmen Performance Matrix</h3>
+            <p>Comprehensive aggregation including matches, runs, average, and boundaries</p>
+          </div>
+          <input type="text" class="table-search-input" id="batterSearch" placeholder="🔍 Filter batsman name...">
+        </div>
+        <div class="table-responsive">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>Rank</th>
+                <th>Batsman</th>
+                <th>Total Runs</th>
+                <th>Matches</th>
+                <th>Batting Avg</th>
+                <th>Strike Rate</th>
+                <th>Highest Score</th>
+                <th>4s / 6s</th>
+              </tr>
+            </thead>
+            <tbody id="battersTableBody">
+              <!-- Dynamically populated -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- ==================== TAB 3: BOWLING ==================== -->
+    <div class="tab-pane" id="tab-bowling">
+      <div class="charts-grid-2">
+        
+        <!-- Most Economical Bowlers Bar Chart -->
+        <div class="chart-card">
+          <div class="chart-card-header">
+            <div class="chart-card-title">
+              <h3>
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#8b5cf6" stroke-width="2"><path d="M12 20v-6M6 20V10M18 20V4"></path></svg>
+                Top 10 Most Economical Bowlers
+              </h3>
+              <p>Lowest runs conceded per over (minimum 500 deliveries)</p>
+            </div>
+          </div>
+          <div class="chart-canvas-wrapper">
+            <canvas id="economicalBowlersChart"></canvas>
+          </div>
+        </div>
+
+        <!-- Top Wicket Takers Bar Chart -->
+        <div class="chart-card">
+          <div class="chart-card-header">
+            <div class="chart-card-title">
+              <h3>
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#f43f5e" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>
+                Top IPL Wicket Takers
+              </h3>
+              <p>Leading wicket takers based on dismissals recorded</p>
+            </div>
+          </div>
+          <div class="chart-canvas-wrapper">
+            <canvas id="wicketTakersChart"></canvas>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Bowling Summary Table -->
+      <div class="table-card">
+        <div class="table-header-bar">
+          <div class="chart-card-title">
+            <h3>Elite Bowlers Matrix</h3>
+            <p>Economy rate, balls bowled, overs completed, and wickets</p>
+          </div>
+        </div>
+        <div class="table-responsive">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>Rank</th>
+                <th>Bowler</th>
+                <th>Economy Rate</th>
+                <th>Balls Bowled</th>
+                <th>Overs</th>
+                <th>Runs Conceded</th>
+                <th>Wickets</th>
+              </tr>
+            </thead>
+            <tbody id="bowlersTableBody">
+              <!-- Dynamically populated -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- ==================== TAB 4: FRANCHISES ==================== -->
+    <div class="tab-pane" id="tab-franchises">
+      <div class="charts-grid-2">
+        
+        <!-- Team Wins Horizontal Bar Chart -->
+        <div class="chart-card">
+          <div class="chart-card-header">
+            <div class="chart-card-title">
+              <h3>
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#f59e0b" stroke-width="2"><path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"></path><path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"></path><path d="M18 2H6v7a6 6 0 0 0 12 0V2z"></path></svg>
+                Total Wins by Franchise
+              </h3>
+              <p>All-time victories across league and playoffs</p>
+            </div>
+          </div>
+          <div class="chart-canvas-wrapper">
+            <canvas id="teamWinsChart"></canvas>
+          </div>
+        </div>
+
+        <!-- Knockout Wins Chart -->
+        <div class="chart-card">
+          <div class="chart-card-header">
+            <div class="chart-card-title">
+              <h3>
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#ec4899" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
+                Playoff & Knockout Resilience
+              </h3>
+              <p>Wins in Qualifiers, Eliminators, and Finals</p>
+            </div>
+          </div>
+          <div class="chart-canvas-wrapper">
+            <canvas id="knockoutWinsChart"></canvas>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Team Season-wise Runs (Multi-line comparison) -->
+      <div class="chart-card" style="margin-bottom: 28px;">
+        <div class="chart-card-header">
+          <div class="chart-card-title">
+            <h3>Top Franchise Run Output by Season</h3>
+            <p>Annual total batsman runs scored by MI, CSK, RCB, KKR, DC, and RR</p>
+          </div>
+        </div>
+        <div class="chart-canvas-wrapper" style="min-height: 380px;">
+          <canvas id="teamSeasonRunsChart"></canvas>
+        </div>
+      </div>
+    </div>
+
+    <!-- ==================== TAB 5: OVERS & TOSS ==================== -->
+    <div class="tab-pane" id="tab-overs">
+      
+      <!-- Over-by-Over Scoring Curve -->
+      <div class="chart-card" style="margin-bottom: 28px;">
+        <div class="chart-card-header">
+          <div class="chart-card-title">
+            <h3>
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#2563eb" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline></svg>
+              Over-by-Over Scoring Rate: Innings 1 vs Innings 2
+            </h3>
+            <p>Average runs scored per delivery for each over (1 to 20) across all matches</p>
+          </div>
+        </div>
+        <div class="chart-canvas-wrapper" style="min-height: 380px;">
+          <canvas id="overProgressionChart"></canvas>
+        </div>
+
+        <!-- Cricket Match Phases Analysis -->
+        <div class="phase-cards-grid">
+          <div class="phase-card">
+            <h4><span class="badge-pill badge-blue">Overs 1 – 6</span> Powerplay Phase</h4>
+            <p>Batters capitalize on fielding restrictions (max 2 fielders outside 30-yard circle). Scoring averages <strong>1.15 – 1.35 runs/ball</strong> (~7.5 runs/over).</p>
+          </div>
+          <div class="phase-card">
+            <h4><span class="badge-pill badge-green">Overs 7 – 15</span> Middle Consolidation</h4>
+            <p>Spinners and medium pacers control run flow. Strike rotation is key. Scoring stabilizes around <strong>1.20 – 1.30 runs/ball</strong> with fewer boundary risks.</p>
+          </div>
+          <div class="phase-card">
+            <h4><span class="badge-pill badge-gold">Overs 16 – 20</span> Death Overs Acceleration</h4>
+            <p>All-out aggression and death bowling execution. Run rate surges drastically to over <strong>1.75 – 2.05 runs/ball</strong> (11 – 13+ runs/over).</p>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- ==================== TAB 6: COMMENTARY ==================== -->
+    <div class="tab-pane" id="tab-commentary">
+      
+      <!-- Live Broadcaster Studio Card -->
+      <div class="commentary-box">
+        <div class="commentary-header">
+          <div class="commentary-tag">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="2"></circle><path d="M16.24 7.76a6 6 0 0 1 0 8.49m-8.48-.01a6 6 0 0 1 0-8.49m11.31-2.82a10 10 0 0 1 0 14.14m-14.14 0a10 10 0 0 1 0-14.14"></path></svg>
+            Broadcaster On-Air Commentary Brief
+          </div>
+          <button class="btn-copy" id="btnCopyCommentary">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+            Copy Script
+          </button>
+        </div>
+        <p class="commentary-text" id="commentaryText">
+          "Looking at the IPL records in this dataset, V Kohli is the leading run-scorer with 8,014 runs and an estimated batting average of 38.71. Among bowlers with at least 500 deliveries, Rashid Khan has the lowest economy rate at 6.60 runs per over. The 2023 season recorded 24,000+ runs across matches. Mumbai Indians leads the knockout-win count with 19 wins in the available data. These numbers give broadcasters a quick view of leading batting, bowling and team performances across the seasons covered."
+        </p>
+      </div>
+
+      <!-- Player of the Match Hall of Fame -->
+      <div class="chart-card">
+        <div class="chart-card-header">
+          <div class="chart-card-title">
+            <h3>
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#f59e0b" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
+              Player of the Match Hall of Fame
+            </h3>
+            <p>Top 10 players with the most Player of the Match awards</p>
+          </div>
+        </div>
+        <div class="chart-canvas-wrapper" style="min-height: 360px;">
+          <canvas id="potmChart"></canvas>
+        </div>
+      </div>
+
+    </div>
+
+  </main>
+
+  <!-- Footer -->
+  <footer class="site-footer">
+    <div class="container">
+      <p>SportsPulse IPL Data Analytics • Built with Python, Pandas, Chart.js & Vanilla CSS</p>
+      <p style="margin-top: 6px; font-size: 0.8rem; color: var(--text-dim);">
+        Data source: <code>deliveries.csv</code> and <code>matches.csv</code> • Ready for GitHub Pages
+      </p>
+    </div>
+  </footer>
+
+  <!-- Scripts -->
+  <script src="data.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
